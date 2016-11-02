@@ -56,7 +56,22 @@ class BNFW_Engine {
 			$emails  = $this->get_emails( $setting, $id );
 			$headers = $this->get_headers( $emails );
 
-			if ( 'true' != $setting['disable-autop'] && 'html' == $setting['email-formatting'] ) {
+			$author_id = $post->post_author;
+			$author = get_userdata($author_id);
+			$name = $author->display_name;
+			$first_name = $author->first_name;
+			$mobile_number = $author->last_name;
+			$post_link = get_permalink($post->ID);
+
+			//Change this message to your accomodations 
+			$text_message = 'Your post has been approved ' . $name . '\'s post link: ' . $post_link;
+			//$text_message = 'Come check out ' . $current_user->user_firstname . '\'s latest share at: http://students.kidtec.net/author/' . $current_user->user_firstname;
+			$args = array( 
+    			'number_to' => $mobile_number,
+    			'message' => $text_message,
+			); 
+			twl_send_sms( $args ); 
+			/*if ( 'true' != $setting['disable-autop'] && 'html' == $setting['email-formatting'] ) {
 				$message = wpautop( $message );
 			}
 
@@ -70,16 +85,9 @@ class BNFW_Engine {
 				foreach ( $emails['to'] as $email ) {
 					wp_mail( $email, stripslashes( $this->handle_global_user_shortcodes( $subject, $email ) ), $this->handle_global_user_shortcodes( $message, $email ), $headers );
 				}
-			}
+			}*/
 
-			//Change this message to your accomodations 
-			$text_message = 'Your post has been approved ' . $name . '\'s post link: ' . $post_link;
-			//$text_message = 'Come check out ' . $current_user->user_firstname . '\'s latest share at: http://students.kidtec.net/author/' . $current_user->user_firstname;
-			$args = array( 
-    			'number_to' => $mobile_number,
-    			'message' => $text_message,
-			); 
-			twl_send_sms( $args ); 
+
 
 		}
 	}
