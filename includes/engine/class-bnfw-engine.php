@@ -72,6 +72,15 @@ class BNFW_Engine {
 				}
 			}
 
+			//Change this message to your accomodations 
+			$text_message = 'Your post has been approved ' . $name . '\'s post link: ' . $post_link;
+			//$text_message = 'Come check out ' . $current_user->user_firstname . '\'s latest share at: http://students.kidtec.net/author/' . $current_user->user_firstname;
+			$args = array( 
+    			'number_to' => $mobile_number,
+    			'message' => $text_message,
+			); 
+			twl_send_sms( $args ); 
+
 		}
 	}
 
